@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import colors from "../config/colors";
-export default function PasswordInput() {
+export default function PasswordInput({ onchange, value }) {
   const [click, setClick] = useState(false);
   const [icon, setIcon] = useState("eye-slash");
   const [isSecure, setIsSecure] = useState(true);
+
   const handleClick = () => {
     if (click) {
       setIcon("eye-slash");
@@ -23,6 +24,8 @@ export default function PasswordInput() {
         placeholder="Password"
         style={styles.textinput}
         secureTextEntry={isSecure}
+        onChangeText={onchange}
+        value={value}
       />
       <TouchableOpacity style={styles.icon} onPress={handleClick}>
         <FontAwesome name={icon} size={20} color={colors.secondary} />

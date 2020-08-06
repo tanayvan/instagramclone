@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React, { useState, useContext } from "react";
+import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
 import { auth } from "firebase";
 
 import logo from "../assets/Logo.png";
@@ -9,21 +9,37 @@ import AppTextInput from "../components/TextInput";
 import AppButton from "../components/AppButton";
 import PasswordInput from "../components/PasswordInput";
 import colors from "../config/colors";
-import { onChange } from "react-native-reanimated";
+import AuthContext from "../AuthContext/Context";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
-  const onchange = () => {};
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { user, setUser } = useContext(AuthContext);
   const handleSubmit = () => {
+    setLoading(true);
     auth()
-      .signInWithEmailAndPassword("tanayvan258@gmail.com", "rock1999")
-      .then((token) => {
-        if (token.user) {
-          console.log(email);
+      .signInWithEmailAndPassword(email, password)
+      .then((data) => {
+        if (data.user) {
+          setError("");
+          console.log("Success");
+          setUser(data.user);
         }
       })
       .catch((error) => {
-        console.log(error);
+        setLoading(false);
+        if (error.code == "auth/invalid-email") {
+          setError("Email is in bad format");
+        }
+        if (error.code == "auth/user-not-found") {
+          setError("This email does not exists ");
+        }
+        if (error.code == "auth/wrong-password") {
+          setError("Your password is incorrect");
+        }
       });
   };
 
@@ -40,16 +56,25 @@ export default function LoginScreen({ navigation }) {
             marginLeft: 70,
           }}
         />
+        <ActivityIndicator size="large" animating={loading} />
         <View style={styles.formInputContainer}>
           <View style={styles.formSubContainer}>
             <View>
-              <Text style={{ color: "red" }}>Error</Text>
+              <Text style={{ color: "red", margin: 2 }}>
+                {error ? error.toString() : ""}
+              </Text>
               <AppTextInput
                 placeholder="Phone number, username or Email"
                 keyboardtype="email-address"
+                onchange={(email) => setEmail(email)}
+                value={email}
               />
             </View>
-            <PasswordInput />
+            <PasswordInput
+              onchange={(password) => setPassword(password)}
+              value={password}
+            />
+
             <View style={styles.button}>
               <AppButton name="Login" onSubmit={handleSubmit} />
             </View>
