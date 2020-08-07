@@ -1,12 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import * as firebase from "firebase";
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import HomePage from "./screens/HomePage";
 import AuthContext from "./AuthContext/Context";
 import AuthNavigation from "./Navigations/AuthNavigation";
 import AppNavigation from "./Navigations/AppNavigation";
@@ -26,6 +22,15 @@ if (!firebase.apps.length) {
 }
 export default function App() {
   const [user, setUser] = useState();
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      console.log(user);
+      if (user) {
+        setUser(user);
+      }
+      unsubscribe();
+    });
+  }, []);
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       {user ? <AppNavigation /> : <AuthNavigation />}

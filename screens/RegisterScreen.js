@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { auth } from "firebase";
 
 import Screen from "../components/Screen";
 import AppTextInput from "../components/TextInput";
@@ -16,6 +11,8 @@ import colors from "../config/colors";
 export default function RegisterScreen({ navigation }) {
   const [isNumber, setIsNumber] = useState(true);
   const [isEmail, setIsEmail] = useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const handleNumber = () => {
     setIsNumber(true);
     setIsEmail(false);
@@ -23,6 +20,29 @@ export default function RegisterScreen({ navigation }) {
   const handleEmail = () => {
     setIsNumber(false);
     setIsEmail(true);
+  };
+  const handleSubmit = () => {
+    auth()
+      .fetchSignInMethodsForEmail(email)
+      .then((data) => {
+        if (data.length > 0) {
+          setError("Email Already exists");
+        } else {
+          navigation.navigate("Password", { email });
+        }
+      })
+      .catch((error) => {
+        console.log(error.code);
+        if (error.code == "auth/invalid-email") {
+          setError("Email is in bad format");
+        }
+        if (error.code == "auth/network-request-failed") {
+          setError("Network Error");
+        }
+      });
+    console.log(email);
+
+    //
   };
   return (
     <Screen>
@@ -55,13 +75,15 @@ export default function RegisterScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.subContainer}>
+          <Text style={{ color: "red" }}>{error}</Text>
           <AppTextInput
             placeholder={isNumber ? "Enter your Number" : "Enter your Email"}
             keyboardtype={isNumber ? "number-pad" : "email-address"}
+            onchange={(email) => setEmail(email)}
           />
         </View>
         <View style={styles.subContainer}>
-          <AppButton name="Next" />
+          <AppButton name="Next" onSubmit={handleSubmit} />
         </View>
         <View>
           <Text style={{ color: "white", marginTop: 30, textAlign: "center" }}>
