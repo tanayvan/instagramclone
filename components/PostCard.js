@@ -14,7 +14,17 @@ export default function PostCard() {
           }}
           style={styles.profile}
         />
-        <Text style={styles.text}>tanay_van</Text>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 15,
+            marginLeft: 10,
+            marginTop: 4,
+            fontWeight: "700",
+          }}
+        >
+          tanay_van
+        </Text>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -49,7 +59,11 @@ export default function PostCard() {
         />
       </View>
       <View>
-        <Text style={styles.text}>Liked By 10</Text>
+        <Text style={styles.text}>700 likes </Text>
+        <View style={styles.captionContainer}>
+          <Text style={styles.text}>tanay_van </Text>
+          <Text style={styles.caption}>Be the Change</Text>
+        </View>
       </View>
     </View>
   );
@@ -61,9 +75,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  container: { marginVertical: 10 },
+  container: { marginVertical: 5 },
+  caption: { color: "white", marginTop: 10, marginLeft: 5, fontSize: 15 },
+  captionContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
   headerContainer: {
-    margin: 10,
+    margin: 5,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -71,5 +90,11 @@ const styles = StyleSheet.create({
   icon: { marginHorizontal: 10 },
   profile: { height: 35, width: 35, borderRadius: 50 },
   post: { height: 450, marginVertical: 10 },
-  text: { color: "white", fontSize: 15, marginLeft: 10 },
+  text: {
+    color: "white",
+    fontSize: 15,
+    marginLeft: 10,
+    marginTop: 10,
+    fontWeight: "700",
+  },
 });

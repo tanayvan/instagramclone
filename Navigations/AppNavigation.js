@@ -38,10 +38,13 @@ export default function AuthNavigation() {
         })}
         tabBarOptions={{
           activeTintColor: colors.white,
-          inactiveTintColor: colors.grey,
-          activeBackgroundColor: colors.primary,
-          inactiveBackgroundColor: colors.primary,
+          inactiveTintColor: colors.white,
+          activeBackgroundColor: colors.dark,
+          inactiveBackgroundColor: colors.dark,
           showLabel: false,
+          style: {
+            borderTopWidth: 0,
+          },
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
