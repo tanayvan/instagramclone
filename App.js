@@ -1,7 +1,8 @@
 import * as firebase from "firebase";
+import _ from "lodash";
 
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, YellowBox } from "react-native";
 
 import AuthContext from "./AuthContext/Context";
 import AuthNavigation from "./Navigations/AuthNavigation";
@@ -23,10 +24,17 @@ if (!firebase.apps.length) {
 export default function App() {
   const [user, setUser] = useState();
   useEffect(() => {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
+    const _console = _.clone(console);
+    console.warn = (message) => {
+      if (message.indexOf("Setting a timer") <= -1) {
+        _console.warn(message);
+      }
+    };
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         setUser(user);
+        console.log(user.email);
       }
       unsubscribe();
     });

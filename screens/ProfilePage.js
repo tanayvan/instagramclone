@@ -1,12 +1,10 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useContext, useState } from "react";
+
+import ProfileScreenComponent from "../components/ProfileScreenComponent";
+import AuthContext from "../AuthContext/Context";
 
 export default function ProfilePage() {
-  return (
-    <View>
-      <Text></Text>
-    </View>
-  );
-}
+  const { user, setUser } = useContext(AuthContext);
 
-const styles = StyleSheet.create({});
+  return <ProfileScreenComponent email={user.email} />;
+}

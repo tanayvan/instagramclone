@@ -1,37 +1,15 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, Text, View, FlatList, Button, Image } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import PostCard from "../components/PostCard";
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-];
+import { auth, storage } from "firebase";
+import AuthContext from "../AuthContext/Context";
+
 export default function HomeScreen() {
+  const { user, setUser } = useContext(AuthContext);
   return (
     <Screen>
       <View style={styles.container}>
@@ -45,10 +23,12 @@ export default function HomeScreen() {
             style={{ position: "absolute", right: 5, margin: 5 }}
           />
         </View>
-        <FlatList
-          data={DATA}
-          renderItem={() => <PostCard />}
-          keyExtractor={(item) => item.id}
+
+        <Button
+          title="submit"
+          onPress={() => {
+            console.log(user);
+          }}
         />
       </View>
     </Screen>

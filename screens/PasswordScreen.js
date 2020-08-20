@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { auth } from "firebase";
+import { auth, firestore } from "firebase";
 import PasswordInput from "../components/PasswordInput";
 import Screen from "../components/Screen";
 import AppTextInput from "../components/TextInput";
 import AppButton from "../components/AppButton";
 import colors from "../config/colors";
 import AuthContext from "../AuthContext/Context";
+require("firebase/firestore");
 
 export default function PasswordScreen({ route, navigation }) {
   const { email } = route.params;
@@ -16,6 +17,21 @@ export default function PasswordScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
+    firestore()
+      .collection("user")
+      .doc(email)
+      .set({
+        followers: [],
+        following: [],
+        post: [],
+        name: name,
+      })
+      .then(() => {
+        console.log("User Added");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setLoading(true);
     setError("");
     auth()

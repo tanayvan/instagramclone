@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { storage } from "firebase";
+import { storage, firestore } from "firebase";
 
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
@@ -22,6 +22,7 @@ export default function ProfileSelectScreen({ route }) {
   const handlePhoto = () => {
     console.log("Clicked");
     setLoading(true);
+
     ImagePicker.requestCameraRollPermissionsAsync();
     ImagePicker.launchImageLibraryAsync().then(async (image) => {
       setPhoto(image);
@@ -29,7 +30,7 @@ export default function ProfileSelectScreen({ route }) {
       const blob = await response.blob();
       ref.put(blob).then(() => {
         setLoading(false);
-        console.log("Success");
+
         setUser(route.params.userToken);
       });
     });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { auth } from "firebase";
+import { auth, firestore } from "firebase";
 
 import Screen from "../components/Screen";
 import AppTextInput from "../components/TextInput";
@@ -40,7 +40,7 @@ export default function RegisterScreen({ navigation }) {
           setError("Network Error");
         }
       });
-    console.log(email);
+    console.log(email, "hi");
 
     //
   };

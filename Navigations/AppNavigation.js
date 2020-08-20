@@ -9,6 +9,9 @@ import HomeScreen from "../screens/HomeScreen";
 import ProfilePage from "../screens/ProfilePage";
 import colors from "../config/colors";
 
+import uploadNavigator from "./uploadNavigator";
+import SearchScreen from "../screens/SearchScreen";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +40,7 @@ export default function AuthNavigation() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: colors.white,
+          activeTintColor: colors.secondary,
           inactiveTintColor: colors.white,
           activeBackgroundColor: colors.dark,
           inactiveBackgroundColor: colors.dark,
@@ -45,11 +48,12 @@ export default function AuthNavigation() {
           style: {
             borderTopWidth: 0,
           },
+          keyboardHidesTabBar: true,
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Search" component={ProfilePage} />
-        <Tab.Screen name="Upload" component={ProfilePage} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen name="Upload" component={uploadNavigator} />
         <Tab.Screen name="Activity" component={ProfilePage} />
         <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
