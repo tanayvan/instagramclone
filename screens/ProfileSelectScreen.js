@@ -14,7 +14,7 @@ export default function ProfileSelectScreen({ route }) {
   const [photo, setPhoto] = useState();
   const [loading, setLoading] = useState(false);
 
-  const ref = storage().ref().child(route.params.userToken.email);
+  const ref = storage().ref(`/profile/${route.params.userToken.email}`);
 
   const handleSkip = () => {
     setUser(route.params.userToken);
@@ -28,9 +28,16 @@ export default function ProfileSelectScreen({ route }) {
       setPhoto(image);
       const response = await fetch(image.uri);
       const blob = await response.blob();
-      ref.put(blob).then(() => {
+      ref.put(blob).then(async () => {
         setLoading(false);
+        const url = await ref.getDownloadURL();
 
+        firestore()
+          .collection("user")
+          .doc(route.params.userToken.email)
+          .update({
+            url: url,
+          });
         setUser(route.params.userToken);
       });
     });

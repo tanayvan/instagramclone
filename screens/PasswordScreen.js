@@ -23,7 +23,7 @@ export default function PasswordScreen({ route, navigation }) {
       .set({
         followers: [],
         following: [],
-        post: [],
+        email: email,
         name: name,
       })
       .then(() => {

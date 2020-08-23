@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function ProfileCounters({ value, numbers }) {
   return (
-    <View style={{ marginLeft: 35 }}>
+    <View style={{ marginHorizontal: 15 }}>
       <Text
         style={{
           color: "white",

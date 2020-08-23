@@ -4,7 +4,7 @@ import colors from "../config/colors";
 
 export default function AppButton({ name, styleprop, onSubmit }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onSubmit}>
+    <TouchableOpacity style={[styles.button, styleprop]} onPress={onSubmit}>
       <Text style={styles.text}>{name}</Text>
     </TouchableOpacity>
   );

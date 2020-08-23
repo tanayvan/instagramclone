@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,17 +10,22 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { firestore, auth } from "firebase";
+import { firestore, auth, storage } from "firebase";
 
 import Screen from "./Screen";
 import colors from "../config/colors";
 import ProfileCounters from "./ProfileCounters";
+import AuthContext from "../AuthContext/Context";
+import AppButton from "./AppButton";
 
 export default function ProfileComponent({ email }) {
   const [photoData, setPhotoData] = useState([]);
+  const [profile, setProfile] = useState("");
   const [metaData, setMetaData] = useState({});
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { user, setUser } = useContext(AuthContext);
+
   useEffect(() => {
     loadImages();
     loadUserData();
@@ -40,7 +45,7 @@ export default function ProfileComponent({ email }) {
         setIsRefreshing(false);
       });
   };
-  const loadUserData = () => {
+  const loadUserData = async () => {
     firestore()
       .collection("user")
       .doc(email)
@@ -49,6 +54,8 @@ export default function ProfileComponent({ email }) {
         setMetaData(documentSnapshot.data());
         setLoading(false);
       });
+    const url = await storage().ref(`/profile/${email}`).getDownloadURL();
+    setProfile(url);
   };
   return loading ? (
     <ActivityIndicator
@@ -80,33 +87,41 @@ export default function ProfileComponent({ email }) {
           style={{
             color: "white",
             fontWeight: "700",
-            fontSize: 30,
-          }}
-        >
-          Welcome Back !
-        </Text>
-        <Text
-          style={{
-            color: "white",
-            fontWeight: "700",
             fontSize: 40,
+            marginLeft: 25,
           }}
         >
-          {metaData.name.split(" ")[0]}.
+          {metaData.name}
         </Text>
       </View>
       <View style={styles.profileContainer}>
-        <Image
-          source={{
-            uri:
-              "https://www.creative-flyers.com/wp-content/uploads/2020/06/Summer-Beach-House-Flyer.jpg",
-          }}
-          style={styles.image}
-        />
+        {profile ? (
+          <Image
+            source={{
+              uri: profile,
+            }}
+            style={styles.image}
+          />
+        ) : (
+          <View />
+        )}
         <View
           style={{ width: "40%", position: "absolute", right: 50, top: 20 }}
         >
-          <Button title="Edit Profile" color={colors.secondary} />
+          {email === user.email ? (
+            <AppButton
+              name={"Sign Out"}
+              color={colors.secondary}
+              onSubmit={() => {
+                auth().signOut();
+                setUser("");
+              }}
+            />
+          ) : metaData.following.includes(email) ? (
+            <AppButton name={"Following"} color={colors.secondary} />
+          ) : (
+            <AppButton name={"Follow"} color={colors.secondary} />
+          )}
         </View>
         <View style={styles.metadataContainer}>
           <ProfileCounters numbers={photoData.length} value="Posts" />
