@@ -7,6 +7,7 @@ import { StyleSheet, Text, View, Image, YellowBox } from "react-native";
 import AuthContext from "./AuthContext/Context";
 import AuthNavigation from "./Navigations/AuthNavigation";
 import AppNavigation from "./Navigations/AppNavigation";
+import UserContext from "./UserContext/Context";
 
 var firebaseConfig = {
   apiKey: "AIzaSyAm4VoPnUQETyoWATw9ROP84bF0AryGeSc",
@@ -23,6 +24,25 @@ if (!firebase.apps.length) {
 }
 export default function App() {
   const [user, setUser] = useState();
+  const [userData, setUserData] = useState();
+
+  const loadUserData = async (email) => {
+    await firebase
+      .firestore()
+      .collection("user")
+      .doc(email)
+      .get()
+      .then((documentSnapshot) => {
+        console.log("User exists: ", documentSnapshot.exists);
+
+        if (documentSnapshot.exists) {
+          console.log("User data: ", documentSnapshot.data());
+          setUserData(documentSnapshot.data());
+          console.log(documentSnapshot.data());
+        }
+      });
+  };
+
   useEffect(() => {
     YellowBox.ignoreWarnings(["Setting a timer"]);
     const _console = _.clone(console);
@@ -35,14 +55,17 @@ export default function App() {
       if (user) {
         setUser(user);
         console.log(user.email);
+        loadUserData(user.email);
       }
       unsubscribe();
     });
   }, []);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {user ? <AppNavigation /> : <AuthNavigation />}
-    </AuthContext.Provider>
+    <UserContext.Provider value={{ userData, setUserData }}>
+      <AuthContext.Provider value={{ user, setUser }}>
+        {user ? <AppNavigation /> : <AuthNavigation />}
+      </AuthContext.Provider>
+    </UserContext.Provider>
   );
 }
 

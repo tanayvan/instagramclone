@@ -17,6 +17,9 @@ import colors from "../config/colors";
 import ProfileCounters from "./ProfileCounters";
 import AuthContext from "../AuthContext/Context";
 import AppButton from "./AppButton";
+import UserContext from "../UserContext/Context";
+import UnFollowButton from "./UnFollowButton";
+import FollowButton from "./FollowButton";
 
 export default function ProfileComponent({ email }) {
   const [photoData, setPhotoData] = useState([]);
@@ -25,6 +28,7 @@ export default function ProfileComponent({ email }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(AuthContext);
+  const { userData } = useContext(UserContext);
 
   useEffect(() => {
     loadImages();
@@ -117,10 +121,10 @@ export default function ProfileComponent({ email }) {
                 setUser("");
               }}
             />
-          ) : metaData.following.includes(email) ? (
-            <AppButton name={"Following"} color={colors.secondary} />
+          ) : userData.following.includes(email) ? (
+            <UnFollowButton />
           ) : (
-            <AppButton name={"Follow"} color={colors.secondary} />
+            <FollowButton useremail={email} />
           )}
         </View>
         <View style={styles.metadataContainer}>

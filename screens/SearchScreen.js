@@ -19,6 +19,7 @@ import ProfileCounters from "../components/ProfileCounters";
 import ProfileCard from "../components/ProfileCard";
 import Animated from "react-native-reanimated";
 import AuthContext from "../AuthContext/Context";
+import UserContext from "../UserContext/Context";
 const { width, height } = Dimensions.get("screen");
 
 const SPACING = 10;
@@ -32,6 +33,7 @@ export default function SearchScreen({ navigation }) {
   const [animating, setAnimating] = useState(true);
 
   const { user, setUser } = useContext(AuthContext);
+  const { userData, setUserData } = useContext(UserContext);
 
   const loadData = () => {
     firestore()
@@ -50,6 +52,21 @@ export default function SearchScreen({ navigation }) {
         });
         setData(users);
         setLoading(false);
+      })
+      .then(() => {
+        firestore()
+          .collection("user")
+          .doc(user.email)
+          .get()
+          .then((documentSnapshot) => {
+            console.log("User exists: ", documentSnapshot.exists);
+
+            if (documentSnapshot.exists) {
+              console.log("User data: ", documentSnapshot.data());
+              setUserData(documentSnapshot.data());
+              console.log(documentSnapshot.data());
+            }
+          });
       });
   };
   useEffect(() => {
