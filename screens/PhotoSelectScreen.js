@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 
 import Screen from "../components/Screen";
@@ -22,6 +15,7 @@ export default function PhotoSelectScreen({ navigation }) {
   };
 
   useEffect(() => {
+    MediaLibrary.requestPermissionsAsync();
     MediaLibrary.getPermissionsAsync();
     MediaLibrary.getAssetsAsync({ mediaType: "photo", first: 100 })
       .then((data) => {

@@ -55,7 +55,6 @@ export default function AuthNavigation() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchNavigator} />
         <Tab.Screen name="Upload" component={uploadNavigator} />
-        <Tab.Screen name="Activity" component={ProfilePage} />
         <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
     </NavigationContainer>

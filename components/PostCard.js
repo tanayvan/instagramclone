@@ -1,16 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome5, SimpleLineIcons, Entypo } from "@expo/vector-icons";
+import { FontAwesome, SimpleLineIcons, Entypo } from "@expo/vector-icons";
+import colors from "../config/colors";
 
-export default function PostCard() {
+const height = Dimensions.get("screen").height * 0.64;
+
+const width = Dimensions.get("screen").width;
+export default function PostCard({ url, name }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image
           source={{
-            uri:
-              "https://images.pexels.com/photos/4940300/pexels-photo-4940300.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            uri: url,
           }}
           style={styles.profile}
         />
@@ -23,47 +26,19 @@ export default function PostCard() {
             fontWeight: "700",
           }}
         >
-          tanay_van
+          {name}
         </Text>
       </View>
       <View style={styles.imageContainer}>
         <Image
           source={{
-            uri:
-              "https://images.pexels.com/photos/4940300/pexels-photo-4940300.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            uri: url,
           }}
           style={styles.post}
         />
       </View>
-      <View style={styles.buttonContainer}>
-        <AntDesign name="hearto" size={24} color="white" style={styles.icon} />
-        <FontAwesome5
-          name="comment-alt"
-          size={24}
-          color="white"
-          style={styles.icon}
-        />
-        <SimpleLineIcons
-          name="paper-plane"
-          size={24}
-          color="white"
-          style={styles.icon}
-        />
-        <Entypo
-          name="awareness-ribbon"
-          size={24}
-          color="black"
-          size={24}
-          color="white"
-          style={{ position: "absolute", right: 3 }}
-        />
-      </View>
-      <View>
-        <Text style={styles.text}>700 likes </Text>
-        <View style={styles.captionContainer}>
-          <Text style={styles.text}>tanay_van </Text>
-          <Text style={styles.caption}>Be the Change</Text>
-        </View>
+      <View style={{ marginLeft: 15, marginVertical: 2 }}>
+        <FontAwesome name="heart-o" size={30} color="white" />
       </View>
     </View>
   );
@@ -75,21 +50,35 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  container: { marginVertical: 5 },
+  container: {
+    marginVertical: 5,
+    backgroundColor: colors.dark,
+    borderRadius: 15,
+    height: height,
+    width: width,
+  },
   caption: { color: "white", marginTop: 10, marginLeft: 5, fontSize: 15 },
   captionContainer: {
     display: "flex",
     flexDirection: "row",
+    marginVertical: 10,
   },
   headerContainer: {
     margin: 5,
+    marginVertical: 10,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
   },
-  icon: { marginHorizontal: 10 },
+
   profile: { height: 35, width: 35, borderRadius: 50 },
-  post: { height: 450, marginVertical: 10 },
+  post: {
+    marginVertical: 10,
+    height: height * 0.8,
+    borderRadius: 10,
+    width: "99%",
+    alignSelf: "center",
+  },
   text: {
     color: "white",
     fontSize: 15,

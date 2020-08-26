@@ -53,18 +53,16 @@ export default function SearchScreen({ navigation }) {
         setData(users);
         setLoading(false);
       })
-      .then(() => {
-        firestore()
+      .then(async () => {
+        await firestore()
           .collection("user")
           .doc(user.email)
           .get()
           .then((documentSnapshot) => {
             console.log("User exists: ", documentSnapshot.exists);
-
             if (documentSnapshot.exists) {
               console.log("User data: ", documentSnapshot.data());
               setUserData(documentSnapshot.data());
-              console.log(documentSnapshot.data());
             }
           });
       });

@@ -1,33 +1,94 @@
-import React, { useContext } from "react";
-import { StyleSheet, Text, View, FlatList, Button, Image } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Button,
+  Image,
+  Dimensions,
+} from "react-native";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 
-import Screen from "../components/Screen";
 import colors from "../config/colors";
 import PostCard from "../components/PostCard";
-import { auth, storage } from "firebase";
 import AuthContext from "../AuthContext/Context";
+import Screen from "../components/Screen";
+import { storage, firestore } from "firebase";
+import UserContext from "../UserContext/Context";
 
 export default function HomeScreen() {
   const { user, setUser } = useContext(AuthContext);
+  const { userData, setUserdata } = useContext(UserContext);
+  const [profile, setProfile] = useState();
+  const [loading, setLoading] = useState(false);
+  const [postData, setPostData] = useState([]);
+
+  const loadPostData = () => {
+    const postData = [];
+    userData.following.forEach(async (user) => {
+      console.log("User", user);
+      await firestore()
+        .collection("posts")
+        .where("email", "==", user)
+        .get()
+        .then((querySnapshot) => {
+          console.log("Total users: ", querySnapshot.size);
+
+          querySnapshot.forEach((documentSnapshot) => {
+            console.log(
+              "User ID: ",
+              documentSnapshot.id,
+              postData.push(documentSnapshot.data())
+            );
+          });
+        })
+        .then(() => {
+          setPostData(postData);
+        });
+    });
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      const url = await storage()
+        .ref(`/profile/${user.email}`)
+        .getDownloadURL();
+      setProfile(url);
+    };
+    load();
+
+    loadPostData();
+    console.log("HEllo", userData);
+  }, []);
+
   return (
     <Screen>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Feather name="camera" size={25} color="white" style={styles.icon} />
-          <Text style={styles.text}>Instagram</Text>
-          <Feather
-            name="message-square"
-            size={25}
-            color="white"
-            style={{ position: "absolute", right: 5, margin: 5 }}
-          />
+        <View style={styles.header}>
+          <SimpleLineIcons name="camera" size={34} color="white" />
+          {profile ? (
+            <Image
+              source={{ uri: profile }}
+              style={{ height: 40, width: 40, borderRadius: 25 }}
+            />
+          ) : (
+            <View style={{ height: 40, width: 40, backgroundColor: "grey" }} />
+          )}
+          <Octicons name="settings" size={34} color="white" />
         </View>
-
-        <Button
-          title="submit"
-          onPress={() => {
-            console.log(user);
+        <FlatList
+          data={postData}
+          renderItem={({ item }) => (
+            <PostCard url={item.url} name={item.email.split("@")[0]} />
+          )}
+          keyExtractor={(item, index) => String(index)}
+          refreshing={loading}
+          onRefresh={() => {
+            setLoading(true);
+            loadPostData();
+            setLoading(false);
           }}
         />
       </View>
@@ -38,14 +99,18 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: Dimensions.get("screen").width,
+    backgroundColor: "black",
   },
-  headerContainer: {
-    height: 50,
-    backgroundColor: colors.dark,
+  header: {
+    margin: 20,
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between",
   },
-  icon: { margin: 5 },
-  text: { color: "white", fontSize: 25, marginHorizontal: 10 },
+  text: {
+    textAlign: "center",
+    fontSize: 50,
+    backgroundColor: "transparent",
+  },
 });

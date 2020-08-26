@@ -51,11 +51,11 @@ export default function App() {
         _console.warn(message);
       }
     };
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
+        await loadUserData(user.email);
         setUser(user);
         console.log(user.email);
-        loadUserData(user.email);
       }
       unsubscribe();
     });
