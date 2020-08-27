@@ -10,6 +10,7 @@ import AppButton from "../components/AppButton";
 import PasswordInput from "../components/PasswordInput";
 import colors from "../config/colors";
 import AuthContext from "../AuthContext/Context";
+import UserContext from "../UserContext/Context";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -18,6 +19,8 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const { user, setUser } = useContext(AuthContext);
+  const { userData, setUserData } = useContext(UserContext);
+
   const handleSubmit = () => {
     setLoading(true);
     auth()
@@ -26,6 +29,7 @@ export default function LoginScreen({ navigation }) {
         if (data.user) {
           setError("");
           console.log("Success");
+
           setUser(data.user);
         }
       })

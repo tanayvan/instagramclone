@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
     backgroundColor: colors.dark,
-    borderRadius: 15,
+    borderRadius: 10,
     height: height,
     width: width,
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     height: height * 0.8,
     borderRadius: 10,
-    width: "99%",
+    width: "95%",
     alignSelf: "center",
   },
   text: {

@@ -115,7 +115,7 @@ export default function ProfileComponent({ email }) {
           {email === user.email ? (
             <AppButton
               name={"Sign Out"}
-              color={colors.secondary}
+              styleprop={{ backgroundColor: "tomato" }}
               onSubmit={() => {
                 auth().signOut();
                 setUser("");
