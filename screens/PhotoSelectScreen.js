@@ -15,7 +15,18 @@ export default function PhotoSelectScreen({ navigation }) {
   };
 
   useEffect(() => {
-    MediaLibrary.requestPermissionsAsync();
+    MediaLibrary.requestPermissionsAsync().then(() => {
+      MediaLibrary.getAssetsAsync({ mediaType: "photo", first: 100 })
+        .then((data) => {
+          setAssetId(data.endCursor);
+          data.assets.map((item) => {
+            allphotos.push(item);
+          });
+        })
+        .finally(() => {
+          setPhoto(allphotos);
+        });
+    });
     MediaLibrary.getPermissionsAsync();
     MediaLibrary.getAssetsAsync({ mediaType: "photo", first: 100 })
       .then((data) => {

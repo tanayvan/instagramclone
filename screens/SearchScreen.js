@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Dimensions,
   ActivityIndicator,
   FlatList,

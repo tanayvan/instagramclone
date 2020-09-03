@@ -19,7 +19,7 @@ export default function PasswordInput({ onchange, value }) {
     }
   };
   return (
-    <View>
+    <View style={{ width: "100%" }}>
       <TextInput
         placeholder="Password"
         style={styles.textinput}
@@ -37,12 +37,12 @@ export default function PasswordInput({ onchange, value }) {
 const styles = StyleSheet.create({
   icon: {
     position: "absolute",
-    left: 320,
-    top: 22,
+    right: 3,
+    top: 20,
   },
   textinput: {
     marginTop: 10,
-    backgroundColor: "#121212",
+    backgroundColor: colors.dark,
     height: 50,
     width: "100%",
     padding: 15,

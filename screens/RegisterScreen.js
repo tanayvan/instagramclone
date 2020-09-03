@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { auth, firestore } from "firebase";
 
@@ -40,9 +46,6 @@ export default function RegisterScreen({ navigation }) {
           setError("Network Error");
         }
       });
-    console.log(email, "hi");
-
-    //
   };
   return (
     <Screen>
@@ -81,26 +84,26 @@ export default function RegisterScreen({ navigation }) {
             keyboardtype={isNumber ? "number-pad" : "email-address"}
             onchange={(email) => setEmail(email)}
           />
+
+          <AppButton
+            name="Next"
+            onSubmit={handleSubmit}
+            styleprop={{ marginTop: 15 }}
+          />
         </View>
-        <View style={styles.subContainer}>
-          <AppButton name="Next" onSubmit={handleSubmit} />
-        </View>
-        <View>
-          <Text style={{ color: "white", marginTop: 30, textAlign: "center" }}>
+        <View style={{ display: "flex", alignItems: "center" }}>
+          <Text style={{ color: "white", marginTop: 30 }}>
             Have an account?
           </Text>
           <Text
             style={{
               color: colors.secondary,
-              position: "absolute",
-              top: 30,
-              right: 65,
             }}
             onPress={() => {
               navigation.navigate("Login");
             }}
           >
-            Sign Up
+            Sign in
           </Text>
         </View>
       </View>
@@ -110,18 +113,16 @@ export default function RegisterScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 150,
-    marginLeft: 20,
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
     justifyContent: "center",
-    width: "85%",
   },
   formContainer: { flexDirection: "row", marginTop: 10 },
-  icon: {
-    marginLeft: 100,
-  },
+
   subContainer: {
-    marginLeft: 10,
     marginTop: 25,
+    width: Dimensions.get("screen").width * 0.9,
   },
   text: {
     color: "grey",

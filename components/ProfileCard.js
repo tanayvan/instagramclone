@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
-import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { Image } from "react-native-expo-image-cache";
+
 import colors from "../config/colors";
 import AppButton from "./AppButton";
 import ProfileCounters from "./ProfileCounters";
@@ -17,8 +19,8 @@ export default function ProfileCard({ data, handleClick, onClick }) {
   return (
     <View style={styles.profileCard}>
       <Image
-        source={{ uri: data.url }}
         style={{ height: 100, width: 100, borderRadius: 50 }}
+        {...{ preview: data.url, uri: data.url }}
       />
       <Text style={styles.text} onPress={onClick}>
         {data.name}

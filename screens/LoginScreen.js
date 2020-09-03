@@ -1,5 +1,12 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 import { auth } from "firebase";
 
 import logo from "../assets/Logo.png";
@@ -21,15 +28,15 @@ export default function LoginScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
   const { userData, setUserData } = useContext(UserContext);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then((data) => {
+        setError("");
+        setLoading(false);
         if (data.user) {
-          setError("");
           console.log("Success");
-
           setUser(data.user);
         }
       })
@@ -62,26 +69,23 @@ export default function LoginScreen({ navigation }) {
         />
         <ActivityIndicator size="large" animating={loading} />
         <View style={styles.formInputContainer}>
-          <View style={styles.formSubContainer}>
-            <View>
-              <Text style={{ color: "red", margin: 2 }}>
-                {error ? error.toString() : ""}
-              </Text>
-              <AppTextInput
-                placeholder="Phone number, username or Email"
-                keyboardtype="email-address"
-                onchange={(email) => setEmail(email)}
-                value={email}
-              />
-            </View>
-            <PasswordInput
-              onchange={(password) => setPassword(password)}
-              value={password}
-            />
+          <Text style={{ color: "red", margin: 2 }}>
+            {error ? error.toString() : ""}
+          </Text>
+          <AppTextInput
+            placeholder="Phone number, username or Email"
+            keyboardtype="email-address"
+            onchange={(email) => setEmail(email)}
+            value={email}
+          />
 
-            <View style={styles.button}>
-              <AppButton name="Login" onSubmit={handleSubmit} />
-            </View>
+          <PasswordInput
+            onchange={(password) => setPassword(password)}
+            value={password}
+          />
+
+          <View style={styles.button}>
+            <AppButton name="Login" onSubmit={handleSubmit} />
           </View>
         </View>
         <View style={styles.textContainer}>
@@ -90,9 +94,8 @@ export default function LoginScreen({ navigation }) {
           <Text
             style={{
               color: colors.secondary,
-              position: "absolute",
-              top: 19,
-              right: 79,
+              fontSize: 17,
+              marginTop: 2,
             }}
             onPress={() => {
               navigation.navigate("Register");
@@ -116,12 +119,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   formInputContainer: {
-    marginLeft: 50,
-    width: "90%",
+    width: Dimensions.get("screen").width,
   },
-  formSubContainer: {
-    paddingRight: 25,
-  },
+
   text: {
     color: "white",
   },

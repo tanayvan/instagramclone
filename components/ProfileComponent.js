@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Button,
   FlatList,
   Dimensions,
@@ -11,6 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { firestore, auth, storage } from "firebase";
+import { Image } from "react-native-expo-image-cache";
 
 import Screen from "./Screen";
 import colors from "../config/colors";
@@ -100,12 +100,7 @@ export default function ProfileComponent({ email }) {
       </View>
       <View style={styles.profileContainer}>
         {profile ? (
-          <Image
-            source={{
-              uri: profile,
-            }}
-            style={styles.image}
-          />
+          <Image style={styles.image} {...{ preview: profile, uri: profile }} />
         ) : (
           <View />
         )}
@@ -151,6 +146,8 @@ export default function ProfileComponent({ email }) {
         <FlatList
           data={photoData}
           renderItem={({ item }) => {
+            preview = item.url;
+            uri = item.url;
             return (
               <TouchableOpacity>
                 <View
@@ -163,12 +160,12 @@ export default function ProfileComponent({ email }) {
                   }}
                 >
                   <Image
-                    source={{ uri: item.url }}
                     style={{
                       height: "100%",
                       width: "100%",
                       borderRadius: 20,
                     }}
+                    {...{ preview, uri }}
                   />
                 </View>
               </TouchableOpacity>

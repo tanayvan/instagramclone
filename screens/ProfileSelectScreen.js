@@ -7,17 +7,15 @@ import { storage, firestore } from "firebase";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
 import colors from "../config/colors";
-import AuthContext from "../AuthContext/Context";
 
-export default function ProfileSelectScreen({ route }) {
-  const { user, setUser } = useContext(AuthContext);
+export default function ProfileSelectScreen({ route, navigation }) {
   const [photo, setPhoto] = useState();
   const [loading, setLoading] = useState(false);
 
   const ref = storage().ref(`/profile/${route.params.userToken.email}`);
 
   const handleSkip = () => {
-    setUser(route.params.userToken);
+    navigation.navigate("Login");
   };
   const handlePhoto = () => {
     console.log("Clicked");
@@ -32,13 +30,13 @@ export default function ProfileSelectScreen({ route }) {
         setLoading(false);
         const url = await ref.getDownloadURL();
 
-        firestore()
+        await firestore()
           .collection("user")
           .doc(route.params.userToken.email)
           .update({
             url: url,
           });
-        setUser(route.params.userToken);
+        navigation.navigate("Login");
       });
     });
   };

@@ -1,22 +1,29 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome, SimpleLineIcons, Entypo } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  Animated,
+} from "react-native";
+
+import { FontAwesome, Fontisto } from "@expo/vector-icons";
+import ScalableImage from "react-native-scalable-image";
+
 import colors from "../config/colors";
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
 
 const height = Dimensions.get("screen").height * 0.64;
 
 const width = Dimensions.get("screen").width;
+
 export default function PostCard({ url, name }) {
+  const scale = new Animated.Value(1);
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Image
-          source={{
-            uri: url,
-          }}
-          style={styles.profile}
-        />
+        <Image style={styles.profile} source={{ uri: url }} />
         <Text
           style={{
             color: "white",
@@ -30,15 +37,44 @@ export default function PostCard({ url, name }) {
         </Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image
-          source={{
-            uri: url,
+        <PinchGestureHandler
+          onGestureEvent={Animated.event([{ nativeEvent: { scale: scale } }], {
+            useNativeDriver: true,
+          })}
+          onHandlerStateChange={(event) => {
+            if (event.nativeEvent.oldState === State.ACTIVE) {
+              Animated.spring(scale, {
+                toValue: 1,
+                useNativeDriver: true,
+                bounciness: 1,
+              }).start();
+            }
           }}
-          style={styles.post}
-        />
+        >
+          <Animated.Image
+            source={{ uri: url }}
+            style={{
+              width: width,
+              height: width,
+              transform: [{ scale: scale }],
+              zIndex: 5,
+            }}
+          />
+        </PinchGestureHandler>
       </View>
-      <View style={{ marginLeft: 15, marginVertical: 2 }}>
-        <FontAwesome name="heart-o" size={30} color="white" />
+      <View style={styles.iconContainer}>
+        <FontAwesome
+          name="heart-o"
+          size={30}
+          color="white"
+          style={{ marginHorizontal: 10 }}
+        />
+        <Fontisto
+          name="share-a"
+          size={30}
+          color="white"
+          style={{ marginHorizontal: 10 }}
+        />
       </View>
     </View>
   );
@@ -54,15 +90,10 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: colors.dark,
     borderRadius: 10,
-    height: height,
+
     width: width,
   },
-  caption: { color: "white", marginTop: 10, marginLeft: 5, fontSize: 15 },
-  captionContainer: {
-    display: "flex",
-    flexDirection: "row",
-    marginVertical: 10,
-  },
+
   headerContainer: {
     margin: 5,
     marginVertical: 10,
@@ -70,7 +101,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-
+  iconContainer: {
+    marginVertical: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
   profile: { height: 35, width: 35, borderRadius: 50 },
   post: {
     marginVertical: 10,

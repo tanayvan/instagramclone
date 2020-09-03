@@ -57,7 +57,7 @@ export default function App() {
         setUser(user);
         console.log(user.email);
       }
-      await loadUserData(user.email);
+
       unsubscribe();
     });
   }, []);
